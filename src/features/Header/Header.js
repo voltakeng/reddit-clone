@@ -1,9 +1,15 @@
 import React from "react";
+import "../../css/Header.css";
 
 export function Headers() {
     return (
-        <div>
-            <p>Hi</p>
-        </div>
+        <header>
+            <div class="logo">
+                
+            </div>
+            <form>
+
+            </form>
+        </header>
     )
 }

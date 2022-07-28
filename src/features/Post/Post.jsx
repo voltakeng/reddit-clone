@@ -1,28 +1,86 @@
-import React from "react";
-// import Card from "../../components/Card/Card";
 import "./Post.css"; 
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectVoteUp, selectVoteDown, selectShowComments } from "../../app/postSlice";
+import { voteUp, voteDown, showComments } from "../../app/postSlice";
 import {
-    // TiArrowUpOutline,
+    TiArrowUpOutline,
     TiArrowUpThick,
-    // TiArrowDownOutline,
+    TiArrowDownOutline,
     TiArrowDownThick,
     TiMessage,
   } from 'react-icons/ti';
 
 function Post() {
+
+    const dispatch = useDispatch(); 
+    const isVoteUp = useSelector(selectVoteUp);
+    const isVoteDown = useSelector(selectVoteDown); 
+    const isShowComments = useSelector(selectShowComments); 
+
+    const handleVoteUp = () => {
+        if(isVoteDown){
+            dispatch(voteDown());
+        }
+        dispatch(voteUp());
+    }
+
+    const renderVoteUp = () => {
+        if(isVoteUp){
+            return <TiArrowUpThick className="icon-action" />;
+        } else {
+            return <TiArrowUpOutline className="icon-action" />;
+        }
+    }
+
+    const handleVoteDown = () => {
+        if(isVoteUp){
+            dispatch(voteUp()); 
+        }
+        dispatch(voteDown()); 
+    }
+
+    const renderVoteDown = () => {
+        if(isVoteDown){
+            return <TiArrowDownThick className="icon-action" />;
+        } else {
+            return <TiArrowDownOutline className="icon-action" />;
+        }
+    }
+
+    const getVoteType = () => {
+        if(isVoteUp) return "up-vote";
+        if(isVoteDown) return "down-vote";
+        return ""; 
+    }
+
+    const handleShowComments = () => {
+        dispatch(showComments()); 
+    }
+
     return (
         <article>
             <div className="card">
                 <div className="post-wrapper">
                     <div className="post-votes-container">
-                        <button className="icon-action-button up-vote " aria-label="Up vote">
-                            <TiArrowUpThick className="icon-action"/>
+                        <button 
+                            type="button"
+                            className={`icon-action-button ${getVoteType()} ${isVoteUp && 'active'}`} 
+                            onClick={handleVoteUp}
+                            aria-label="Up vote"
+                        >
+                            {renderVoteUp()}
                         </button>
-                        <p className="post-votes-value up-vote">
+                        <p className={`post-votes-value ${getVoteType()}`}>
                             999
                         </p>
-                        <button className="icon-action-button down-vote " aria-label="Up vote">
-                            <TiArrowDownThick className="icon-action"/>
+                        <button 
+                            type="button"
+                            className={`icon-action-button ${getVoteType()} ${isVoteDown && 'active'}`} 
+                            onClick={handleVoteDown} 
+                            aria-label="Down vote"
+                        >
+                            {renderVoteDown()}
                         </button>
                     </div>
                     <div className="post-container">
@@ -42,7 +100,8 @@ function Post() {
 
                             <span className="post-comments-container">
                                 <button
-                                    className="icon-action-button showing-comments"
+                                    className={`icon-action-button ${isShowComments && 'showing-comments'}`}
+                                    onClick={handleShowComments}
                                     aria-label="Show comments"
                                 >
                                     <TiMessage className="icon-action" />

@@ -1,6 +1,7 @@
+import "./Home.css"; 
 import React from "react";
 import Post from "../Post/Post";
-import "./Home.css"; 
+
 
 function Home() {
     return (

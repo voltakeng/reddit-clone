@@ -9,6 +9,9 @@ const options = {
 }
 const subredditsSlice = createSlice(options);   
 
+
 export const { handleClick } = subredditsSlice.actions;
+
 export const selectSubreddits = state => state.subredditsSlice;
+
 export default subredditsSlice.reducer; 

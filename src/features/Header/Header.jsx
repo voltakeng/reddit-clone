@@ -1,8 +1,22 @@
-import React from "react";
-import { ImReddit, ImSearch } from 'react-icons/im';
 import "./Header.css";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectHeader, setSearchTerm } from "../../app/headerSlice";
+import { ImReddit, ImSearch } from 'react-icons/im';
 
 function Headers() {
+    const dispatch = useDispatch(); 
+    const searchTerm = useSelector(selectHeader); 
+
+    const handleChange = (e) => {
+        dispatch(setSearchTerm(e.target.value))
+    }   
+
+    const handleSubmit = (e) => {
+        e.preventDefault(); 
+        dispatch(setSearchTerm(""))
+    }
+
     return (
         <header>
             <div className="logo">
@@ -11,11 +25,17 @@ function Headers() {
                     Reddit<span>Clone</span>
                 </p>               
             </div>
-            <form className="search">
+            <form className="search" onSubmit={handleSubmit}>
                 <input 
                     aria-label="Search posts"
+                    placeholder="Search"
+                    onChange={handleChange}
+                    value={searchTerm}
                 />
-                <button aria-label="Search">
+                <button 
+                    aria-label="Search"
+                    type="submit"
+                >
                     <ImSearch />
                 </button>
             </form>

@@ -1,9 +1,9 @@
 import "./Post.css"; 
-import React from "react";
+import React, { useState } from "react";
 import Comment from "../Comment/Comment";
 import { useDispatch, useSelector } from "react-redux";
-import { selectVoteUp, selectVoteDown, selectShowComments } from "../../app/postSlice";
-import { voteUp, voteDown, showComments } from "../../app/postSlice";
+import { selectShowComments } from "../../app/postSlice";
+import { showComments } from "../../app/postSlice";
 import moment from "moment";
 import {
     TiArrowUpOutline,
@@ -15,20 +15,19 @@ import {
 
 function Post({ post }) {
 
+    const [ vote, setVote ] = useState(0); 
+
     const dispatch = useDispatch(); 
-    const isVoteUp = useSelector(selectVoteUp);
-    const isVoteDown = useSelector(selectVoteDown); 
+
     const isShowComments = useSelector(selectShowComments); 
 
     const handleVoteUp = () => {
-        if(isVoteDown){
-            dispatch(voteDown());
-        }
-        dispatch(voteUp());
+        if(vote === 1) return setVote(0); 
+        setVote(1);
     }
 
     const renderVoteUp = () => {
-        if(isVoteUp){
+        if(vote === 1){
             return <TiArrowUpThick className="icon-action" />;
         } else {
             return <TiArrowUpOutline className="icon-action" />;
@@ -36,14 +35,12 @@ function Post({ post }) {
     }
 
     const handleVoteDown = () => {
-        if(isVoteUp){
-            dispatch(voteUp()); 
-        }
-        dispatch(voteDown()); 
+        if(vote === -1) return setVote(0); 
+        setVote(-1);
     }
 
     const renderVoteDown = () => {
-        if(isVoteDown){
+        if(vote === -1){
             return <TiArrowDownThick className="icon-action" />;
         } else {
             return <TiArrowDownOutline className="icon-action" />;
@@ -51,9 +48,15 @@ function Post({ post }) {
     }
 
     const getVoteType = () => {
-        if(isVoteUp) return "up-vote";
-        if(isVoteDown) return "down-vote";
+        if(vote === 1) return "up-vote";
+        if(vote === -1) return "down-vote";
         return ""; 
+    }
+
+    const getVoteScore = () => {
+        if(vote === 1) return post.ups+1;
+        if(vote === -1) return post.ups-1;
+        return post.ups;
     }
 
     const handleShowComments = () => {
@@ -67,18 +70,18 @@ function Post({ post }) {
                     <div className="post-votes-container">
                         <button 
                             type="button"
-                            className={`icon-action-button ${getVoteType()} ${isVoteUp && 'active'}`} 
+                            className={`icon-action-button up-vote ${vote === 1 && 'active'}`} 
                             onClick={handleVoteUp}
                             aria-label="Up vote"
                         >
                             {renderVoteUp()}
                         </button>
-                        <p className={`post-votes-value ${getVoteType()}`}>
-                            {post.ups}
+                        <p className={`post-votes-value ${getVoteType()} }`}>
+                            {getVoteScore()}
                         </p>
                         <button 
                             type="button"
-                            className={`icon-action-button ${getVoteType()} ${isVoteDown && 'active'}`} 
+                            className={`icon-action-button down-vote ${vote === -1 && 'active'}`} 
                             onClick={handleVoteDown} 
                             aria-label="Down vote"
                         >
@@ -89,7 +92,7 @@ function Post({ post }) {
                         <h3 className="post-title">{post.title}</h3>
 
                         <div className="post-image-container">
-                            {/* <img /> */}
+                            {/* <img src={post.url} alt="" className="post-image" /> */}
                         </div>
 
                         <div className="post-details">

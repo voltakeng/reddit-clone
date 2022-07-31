@@ -1,5 +1,6 @@
 import "./Post.css"; 
 import React from "react";
+import Comment from "../Comment/Comment";
 import { useDispatch, useSelector } from "react-redux";
 import { selectVoteUp, selectVoteDown, selectShowComments } from "../../app/postSlice";
 import { voteUp, voteDown, showComments } from "../../app/postSlice";
@@ -109,7 +110,7 @@ function Post() {
                             </span>    
                         </div>
 
-                        {/* <Comment /> */}
+                        {isShowComments && <Comment />}
 
                     </div>
                 </div>

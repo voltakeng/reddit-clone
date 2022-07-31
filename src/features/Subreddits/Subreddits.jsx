@@ -1,33 +1,48 @@
 import "./Subreddits.css"; 
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSubreddits, handleClick } from '../../app/subredditsSlice'; 
+import { 
+    selectSelectedSubreddits, 
+    handleSelected,
+    selectSubreddits,
+    loadSubreddits
+ } from '../../app/subredditsSlice'; 
 
 
 function Subreddits() {
-    const isClick = useSelector(selectSubreddits);
+    const selectedSubreddit = useSelector(selectSelectedSubreddits);
+    const subreddits = useSelector(selectSubreddits);
     const dispatch = useDispatch(); 
+
+    useEffect(() => {
+       dispatch(loadSubreddits())
+    }, [dispatch]);
 
     return (
         <div className="subreddit-card card">
             <h2>Subreddits</h2>
             <ul className="subreddits-list"> 
-                <li 
-                    className={`${isClick && `selected-subreddit`}`}
-                >
-                    <button
-                        type="button"
-                        onClick={() => dispatch(handleClick())}
+                {subreddits.map((subreddit) => 
+                    <li
+                        key={subreddit.id}
+                        className={`${
+                            selectedSubreddit === subreddit.url && `selected-subreddit`
+                          }`}
                     >
-                        <img
-                            src="https://blog.idrsolutions.com/wp-content/uploads/2017/02/JPEG-1.png"
-                            alt="test"
-                            className="subreddit-icon"
-                            style={{ border: '3px solid black' }}
-                        />
-                        Test Icon
-                    </button>
-                </li>
+                        <button
+                            type="button"
+                            onClick={()=>dispatch(handleSelected(subreddit.url))}
+                        >
+                            <img
+                                src={subreddit.icon_img || `https://api.adorable.io/avatars/25/${subreddit.display_name}`}
+                                alt={`${subreddit.display_name}`}
+                                className="subreddit-icon"
+                                style={{ border: `3px solid ${subreddit.primary_color}`}}
+                            />
+                            {subreddit.display_name}
+                        </button>
+                    </li>
+                )}              
             </ul>
         </div>
     );

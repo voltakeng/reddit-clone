@@ -4,6 +4,7 @@ import Comment from "../Comment/Comment";
 import { useDispatch, useSelector } from "react-redux";
 import { selectVoteUp, selectVoteDown, selectShowComments } from "../../app/postSlice";
 import { voteUp, voteDown, showComments } from "../../app/postSlice";
+import moment from "moment";
 import {
     TiArrowUpOutline,
     TiArrowUpThick,
@@ -12,7 +13,7 @@ import {
     TiMessage,
   } from 'react-icons/ti';
 
-function Post() {
+function Post({ post }) {
 
     const dispatch = useDispatch(); 
     const isVoteUp = useSelector(selectVoteUp);
@@ -73,7 +74,7 @@ function Post() {
                             {renderVoteUp()}
                         </button>
                         <p className={`post-votes-value ${getVoteType()}`}>
-                            999
+                            {post.ups}
                         </p>
                         <button 
                             type="button"
@@ -85,7 +86,7 @@ function Post() {
                         </button>
                     </div>
                     <div className="post-container">
-                        <h3 className="post-title">Test Test and Test</h3>
+                        <h3 className="post-title">{post.title}</h3>
 
                         <div className="post-image-container">
                             {/* <img /> */}
@@ -94,10 +95,10 @@ function Post() {
                         <div className="post-details">
                             <span className="author-details">
                                 {/* <Avatar /> */}
-                                <span className="author-username">test_username_01</span>
+                                <span className="author-username">{post.author}</span>
                             </span>
 
-                            <span>test_time_01</span>
+                            <span>{moment.unix(post.created_utc).fromNow()}</span>
 
                             <span className="post-comments-container">
                                 <button

@@ -157,6 +157,8 @@ function Post({ post }) {
                             </span>    
                         </div>
 
+                        
+
                         {showComments && renderComments()}
 
                     </div>

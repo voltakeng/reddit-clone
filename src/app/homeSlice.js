@@ -38,5 +38,7 @@ const options = {
 const homeSlice = createSlice(options); 
 
 export const selectPosts = state => state.homeSlice.posts;
+export const selectIsLoadingPosts = state => state.homeSlice.isLoadingPosts; 
+export const selectFailedToLoadPosts = state => state.homeSlice.failedToLoadPosts;
 
 export default homeSlice.reducer; 

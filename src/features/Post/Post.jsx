@@ -1,9 +1,14 @@
 import "./Post.css"; 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css'
+import { 
+    loadComments,
+    selectComments, 
+    selectIsLoadingComments,
+    selectFailedToLoadComments } from "../../app/postSlice";
 import Comment from "../Comment/Comment";
-import { useDispatch, useSelector } from "react-redux";
-import { selectShowComments } from "../../app/postSlice";
-import { showComments } from "../../app/postSlice";
 import moment from "moment";
 import {
     TiArrowUpOutline,
@@ -16,10 +21,18 @@ import {
 function Post({ post }) {
 
     const [ vote, setVote ] = useState(0); 
+    const [ showComments, setShowComments ] = useState(false); 
 
     const dispatch = useDispatch(); 
+    const comments = useSelector(selectComments); 
+    const isLoading = useSelector(selectIsLoadingComments);
+    const isFailed = useSelector(selectFailedToLoadComments);
 
-    const isShowComments = useSelector(selectShowComments); 
+    useEffect(() => {
+        if(showComments){
+            dispatch(loadComments(post.permalink));
+        }
+    }, [dispatch,showComments,post.permalink])
 
     const handleVoteUp = () => {
         if(vote === 1) return setVote(0); 
@@ -60,7 +73,36 @@ function Post({ post }) {
     }
 
     const handleShowComments = () => {
-        dispatch(showComments()); 
+        setShowComments(!showComments);  
+    }
+
+    const renderComments = () => {
+        if (isFailed) {
+            return (
+                <div>
+                    <h3>Error loading comments</h3>
+                </div>
+            );
+        }
+
+        if (isLoading) {
+            return (
+                <div>
+                    <Skeleton count={4}/> 
+                </div>
+            );
+        }
+
+        return (
+            <div>
+                {comments.map(comment => <Comment 
+                    comment={comment}
+                    key={comment.id}
+                />)}
+            </div>
+        );
+
+
     }
 
     return (
@@ -105,16 +147,17 @@ function Post({ post }) {
 
                             <span className="post-comments-container">
                                 <button
-                                    className={`icon-action-button ${isShowComments && 'showing-comments'}`}
+                                    className={`icon-action-button ${showComments && 'showing-comments'}`}
                                     onClick={handleShowComments}
                                     aria-label="Show comments"
                                 >
                                     <TiMessage className="icon-action" />
+                                    {post.num_comments}
                                 </button>
                             </span>    
                         </div>
 
-                        {isShowComments && <Comment />}
+                        {showComments && renderComments()}
 
                     </div>
                 </div>

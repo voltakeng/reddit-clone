@@ -1,27 +1,46 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import API_ROOT from "../api/redddit"
+
+export const loadComments = createAsyncThunk(
+    'post/loadComments',
+    async (permalink) => {
+        const response = await fetch(`${API_ROOT}${permalink}.json`);
+        const json = await response.json(); 
+
+        return json[1].data.children.map((subreddit) => subreddit.data);
+    }
+)
 
 const options = {
     name: 'post', 
-    initialState: { up: false , down: false, showcomments: false }, 
+    initialState: {
+        comments: [],
+        isLoadingComments: false, 
+        failedToLoadComments: false
+    }, 
     reducers: {
-        voteUp: (state) => {
-            state.up = !state.up; 
+
+    },
+    extraReducers: {
+        [loadComments.pending]: (state,action) => {
+            state.isLoadingComments = true;
+            state.failedToLoadComments = false;
         },
-        voteDown: (state) => {
-            state.down = !state.down; 
+        [loadComments.fulfilled]: (state,action) => {
+            state.comments = action.payload; 
+            state.isLoadingComments = false;
+            state.failedToLoadComments = false;
         },
-        showComments: (state) => {
-            state.showcomments = !state.showcomments; 
+        [loadComments.rejected]: (state,action) => {
+            state.isLoadingComments = false;
+            state.failedToLoadComments = true;
         }
     }
 }
 const postSlice = createSlice(options); 
 
-
-export const { voteUp, voteDown, showComments } = postSlice.actions; 
-
-export const selectVoteUp = state => state.postSlice.up; 
-export const selectVoteDown = state => state.postSlice.down;
-export const selectShowComments = state => state.postSlice.showcomments; 
+export const selectComments = state => state.postSlice.comments; 
+export const selectIsLoadingComments = state => state.postSlice.isLoadingComments;
+export const selectFailedToLoadComments = state => state.postSlice.failedToLoadComments;
 
 export default postSlice.reducer; 

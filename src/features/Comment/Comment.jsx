@@ -1,18 +1,21 @@
 import "./Comment.css"
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import moment from 'moment';
 
-function Comment() {
+function Comment({ comment }) {
     return (
         <div className="comment">
 
             <div className="comment-metadata">
                 {/* <Avatar /> */}
-                <p className="comment-author">Test Author</p>
-                <p className="comment-created-time">Test Time</p>
+                <p className="comment-author">{comment.author}</p>
+                <p className="comment-created-time">
+                    {moment.unix(comment.created_utc).fromNow()}
+                </p>
             </div>
 
-            <ReactMarkdown children={"Test Comment"} />
+            <ReactMarkdown children={comment.body} />
 
         </div>
     );

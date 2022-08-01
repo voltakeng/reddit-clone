@@ -129,7 +129,7 @@ function Post({ post, keys }) {
                     </div>
                     <div className="post-container">
                         <h3 className="post-title">{post.title}</h3>
-
+                        
                         <div className="post-image-container">
                             <img src={post.url} alt="" className="post-image" />
                         </div>

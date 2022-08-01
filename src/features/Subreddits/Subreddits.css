@@ -1,5 +1,9 @@
 .subreddit-card {
     padding-right: var(--spacing-2);
+    position: sticky !important;
+    top: 0 !important;
+    height: 1500px!important;
+    overflow-y: scroll !important;
   }
   
   .subreddit-card h2 {

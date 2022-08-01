@@ -46,10 +46,7 @@ function Home() {
 
     return (
         <>
-            {posts.map(post => <Post 
-                post={post} 
-                key={post.id}
-            />)}
+            {posts.map(post => <Post post={post} keys={post.id}/>)}
         </>
     );
 }

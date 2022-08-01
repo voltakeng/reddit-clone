@@ -2,12 +2,13 @@ import "./Post.css";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css'
+import 'react-loading-skeleton/dist/skeleton.css';
 import { 
     loadComments,
     selectComments, 
     selectIsLoadingComments,
-    selectFailedToLoadComments } from "../../app/postSlice";
+    selectFailedToLoadComments,
+ } from "../../app/postSlice";
 import Comment from "../Comment/Comment";
 import moment from "moment";
 import {
@@ -18,7 +19,7 @@ import {
     TiMessage,
   } from 'react-icons/ti';
 
-function Post({ post }) {
+function Post({ post, keys }) {
 
     const [ vote, setVote ] = useState(0); 
     const [ showComments, setShowComments ] = useState(false); 
@@ -27,7 +28,7 @@ function Post({ post }) {
     const comments = useSelector(selectComments); 
     const isLoading = useSelector(selectIsLoadingComments);
     const isFailed = useSelector(selectFailedToLoadComments);
-
+    
     useEffect(() => {
         if(showComments){
             dispatch(loadComments(post.permalink));
@@ -77,32 +78,29 @@ function Post({ post }) {
     }
 
     const renderComments = () => {
-        if (isFailed) {
-            return (
-                <div>
-                    <h3>Error loading comments</h3>
-                </div>
-            );
-        }
+  
+            if (isFailed) {
+                return (
+                    <div>
+                        <h3>Error loading comments</h3>
+                    </div>
+                );
+            }
+    
+            if (isLoading && comments[keys] === undefined) {
+                return (
+                    <div>
+                        <Skeleton count={4}/>
+                    </div>
+                );
+            }
 
-        if (isLoading) {
-            return (
-                <div>
-                    <Skeleton count={4}/> 
-                </div>
-            );
-        }
-
-        return (
-            <div>
-                {comments.map(comment => <Comment 
-                    comment={comment}
-                    key={comment.id}
-                />)}
-            </div>
-        );
-
-
+            if(comments[keys] !== undefined){
+                return (
+                    comments[keys].map( (comment) => (<Comment comment={comment}/>) ) 
+                    //.map( (comment) => (<Comment comment={comment}/>) ) 
+                ); 
+            }
     }
 
     return (
@@ -156,8 +154,6 @@ function Post({ post }) {
                                 </button>
                             </span>    
                         </div>
-
-                        
 
                         {showComments && renderComments()}
 

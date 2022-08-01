@@ -10,5 +10,7 @@ const options = {
 const headerSlice = createSlice(options);
 
 export const { setSearchTerm } = headerSlice.actions; 
-export const selectHeader = state => state.headerSlice; 
+
+export const selectSearchTerm = state => state.headerSlice; 
+
 export default headerSlice.reducer; 

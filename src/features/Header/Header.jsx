@@ -1,12 +1,12 @@
 import "./Header.css";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectHeader, setSearchTerm } from "../../app/headerSlice";
+import { selectSearchTerm, setSearchTerm } from "../../app/headerSlice";
 import { ImReddit, ImSearch } from 'react-icons/im';
 
 function Headers() {
     const dispatch = useDispatch(); 
-    const searchTerm = useSelector(selectHeader); 
+    const searchTerm = useSelector(selectSearchTerm); 
 
     const handleChange = (e) => {
         dispatch(setSearchTerm(e.target.value))

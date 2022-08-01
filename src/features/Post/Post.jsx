@@ -98,7 +98,6 @@ function Post({ post, keys }) {
             if(comments[keys] !== undefined){
                 return (
                     comments[keys].map( (comment) => (<Comment comment={comment}/>) ) 
-                    //.map( (comment) => (<Comment comment={comment}/>) ) 
                 ); 
             }
     }
@@ -132,7 +131,7 @@ function Post({ post, keys }) {
                         <h3 className="post-title">{post.title}</h3>
 
                         <div className="post-image-container">
-                            {/* <img src={post.url} alt="" className="post-image" /> */}
+                            <img src={post.url} alt="" className="post-image" />
                         </div>
 
                         <div className="post-details">
